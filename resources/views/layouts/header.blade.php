@@ -1,17 +1,15 @@
+@php
+    $logoUrl = $layoutBranding['appLogo'] ?? asset('/images/logo_web.png');
+    $iconLogo = $layoutBranding['favicon'] ?? asset('images/logo-light-icon.png');
+@endphp
+
 <div class="navbar-header">
-
-    <a class="navbar-brand LogoRedirection" href="<?php echo URL::to('/'); ?>">
-
+    <a class="navbar-brand LogoRedirection" href="{{ url('/') }}">
         <b>
-
-            <img src="{{ asset('/images/logo_web.png') }}" alt="homepage" class="dark-logo" width="100%" id="logo_web">
-
-            <img src="{{ asset('images/logo-light-icon.png') }}" alt="homepage" class="light-logo">
-
+            <img src="{{ $logoUrl }}" alt="homepage" class="dark-logo" id="logo_web" style="max-width: 150px;">
+            <img src="{{ $iconLogo }}" alt="homepage" class="light-logo" style="max-width: 45px;">
         </b>
-
     </a>
-
 </div>
 
 <div class="navbar-collapse">
@@ -51,29 +49,22 @@
        
 
         <li class="nav-item dropdown">
-
-
-
-         <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{ asset('/images/users/user-new.png') }}" alt="user" class="profile-pic"></a>
+            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="{{ asset('/images/users/user-new.png') }}" alt="user" class="profile-pic">
+            </a>
 
             <div class="dropdown-menu dropdown-menu-right scale-up">
-
                 <ul class="dropdown-user">
-
                     <li>
-
                         <div class="dw-user-box">
-
-                            <div class="u-img "><img class="profile-pic" src="{{ asset('/images/users/user-2.png') }}" alt="user" style="max-width: 45px;"></div>
-
-                            <div class="u-text">
-
-                                <h4 id="username"></h4>
-
+                            <div class="u-img">
+                                <img class="profile-pic" src="{{ asset('/images/users/user-2.png') }}" alt="user" style="max-width: 45px;">
                             </div>
-
+                            <div class="u-text">
+                                <h4>{{ $layoutUser?->name ?? auth()->user()?->name ?? 'Account' }}</h4>
+                                <p class="text-muted mb-0">{{ $layoutUser?->email ?? auth()->user()?->email }}</p>
+                            </div>
                         </div>
-
                     </li>
 
                     <li role="separator" class="divider"></li>

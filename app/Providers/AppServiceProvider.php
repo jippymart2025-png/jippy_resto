@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Setting;
+use App\Models\Vendor;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +34,46 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        View::composer(['layouts.*'], function ($view) {
+            $user = Auth::user();
+            $vendor = null;
+            $vendorId = null;
+            $vendorUuid = null;
 
+            if ($user) {
+                $vendorUuid = $user->firebase_id ?? $user->_id ?? null;
+
+                if (! empty($user->vendorID)) {
+                    $vendorId = $user->vendorID;
+                }
+
+                if (! $vendorId && $vendorUuid) {
+                    $vendor = Vendor::where('author', $vendorUuid)->first();
+                } elseif ($vendorId) {
+                    $vendor = Vendor::where('id', $vendorId)->first();
+                }
+            }
+
+            $settings = Setting::whereIn('document_name', [
+                'document_verification_settings',
+                'DineinForRestaurant',
+                'AdminCommission',
+                'restaurant',
+                'globalSettings',
+            ])->get()->keyBy('document_name');
+
+            $documentSettings = $settings->get('document_verification_settings');
+            $dineInSettings = $settings->get('DineinForRestaurant');
+            $brandSettings = $settings->get('globalSettings');
+
+            $view->with([
+                'layoutUser' => $user,
+                'layoutVendor' => $vendor,
+                'layoutVendorUuid' => $vendorUuid,
+                'layoutDocumentVerificationRequired' => (bool) data_get($documentSettings?->fields, 'isRestaurantVerification', false),
+                'layoutDineInEnabled' => (bool) data_get($dineInSettings?->fields, 'isEnabled', false),
+                'layoutBranding' => $brandSettings?->fields ?? [],
+            ]);
+        });
     }
 }

@@ -8,7 +8,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\VendorUsers;
-use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -19,7 +18,7 @@ class User extends Authenticatable
      *
      * @var string
      */
-    protected $table = 'restaurant_users';
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -27,13 +26,17 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'firstName',
+        'lastName',
         'email',
         'password',
-        'isSubscribed',
-        'two_factor_secret',
-        'two_factor_enabled',
-        'two_factor_backup_codes'
+        'firebase_id',
+        '_id',
+        'vendorID',
+        'wallet_amount',
+        'subscriptionPlanId',
+        'subscription_plan',
+        'subscriptionExpiryDate',
     ];
 
     /**
@@ -56,16 +59,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'two_factor_enabled' => 'boolean',
+        'wallet_amount' => 'float',
     ];
 
-    public function getvendorId(){
-
-        $exist = VendorUsers::where('user_id',Auth::user()->id)->first();
-        if($exist){
-            return $exist->uuid;
-        }else{
-            return null;
+    public function getvendorId()
+    {
+        if (! empty($this->vendorID)) {
+            return $this->vendorID;
         }
-        
+
+        $link = VendorUsers::where('user_id', $this->id)->first();
+
+        return $link?->uuid;
+    }
+
+    public function getNameAttribute()
+    {
+        $name = trim(($this->firstName ?? '') . ' ' . ($this->lastName ?? ''));
+
+        return $name !== '' ? $name : ($this->email ?? '');
     }
 }

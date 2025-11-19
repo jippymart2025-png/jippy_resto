@@ -1,15 +1,22 @@
+@php
+    $currentLocale = str_replace('_', '-', app()->getLocale());
+    $isRtl = $currentLocale === 'ar' || session('is_rtl') === true;
+    $branding = $layoutBranding ?? [];
+    $appName = $branding['applicationName'] ?? config('app.name', 'Restaurant Management System');
+    $logoUrl = $branding['appLogo'] ?? asset('/images/logo_web.png');
+    $faviconUrl = $branding['favicon'] ?? asset('images/logo-light-icon.png');
+    $themeColor = $branding['store_panel_color'] ?? '#ff683a';
+@endphp
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" <?php if (str_replace('_', '-', app()->getLocale()) == 'ar' || @$_COOKIE['is_rtl'] == 'true') { ?> dir="rtl" <?php } ?>>
+<html lang="{{ $currentLocale }}" @if($isRtl) dir="rtl" @endif>
 
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title id="app_name">Restaurant Management System</title>
-        <!--<title id="app_name"><?php echo @$_COOKIE['meta_title']; ?></title>-->
-        <link rel="icon" id="favicon" type="image/x-icon"
-            href="<?php echo str_replace('images/', 'images%2F', @$_COOKIE['favicon']); ?>">
+        <title id="app_name">{{ $appName }}</title>
+        <link rel="icon" id="favicon" type="image/x-icon" href="{{ $faviconUrl }}">
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -17,15 +24,15 @@
         <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
-        <?php if (str_replace('_', '-', app()->getLocale()) == 'ar' || @$_COOKIE['is_rtl'] == 'true') { ?>
-        <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap-rtl.min.css') }}" rel="stylesheet">
-        <?php } ?>
+        @if($isRtl)
+            <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap-rtl.min.css') }}" rel="stylesheet">
+        @endif
         <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-        <?php if (str_replace('_', '-', app()->getLocale()) == 'ar' || @$_COOKIE['is_rtl'] == 'true') { ?>
-        <link href="{{ asset('css/style_rtl.css') }}" rel="stylesheet">
-        <?php } ?>
+        @if($isRtl)
+            <link href="{{ asset('css/style_rtl.css') }}" rel="stylesheet">
+        @endif
         <link href="{{ asset('css/icons/font-awesome/css/font-awesome.css') }}" rel="stylesheet">
-        
+
         <!-- Preload only critical fonts that are used immediately -->
         <link href="{{ asset('assets/plugins/toast-master/css/jquery.toast.css') }}" rel="stylesheet">
         <link href="{{ asset('css/colors/blue.css') }}" rel="stylesheet">
@@ -43,285 +50,53 @@
 
         <!--  @yield('style')-->
 
-        <?php if (isset($_COOKIE['store_panel_color'])) { ?>
-
-        <style type="text/css">
-            .topbar {
-                background:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
+        <style>
+            :root {
+                --theme-color: {{ $themeColor }};
             }
 
-            .sidebar-nav ul li a {
-                border-bottom:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .sidebar-nav ul li a:hover i {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .restaurant_payout_create-inner fieldset legend {
-                background:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            a {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            a:hover,
-            a:focus {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            a.link:hover,
-            a.link:focus {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            html body blockquote {
-                border-left: 5px solid<?php    echo $_COOKIE['store_panel_color']; ?>;
-            }
-
-            .text-warning {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                    !important;
-            }
-
-            .text-info {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                    !important;
-            }
-
-            .sidebar-nav ul li a:hover {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .btn-primary {
-                background:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-                border: 1px solid<?php    echo $_COOKIE['store_panel_color']; ?>;
-            }
-
-            .sidebar-nav>ul>li.active>a {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-                border-left: 3px solid<?php    echo $_COOKIE['store_panel_color']; ?>;
-            }
-
-            .sidebar-nav>ul>li.active>a i {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .bg-info {
-                background-color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                    !important;
-            }
-
-            .bellow-text ul li>span {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-            }
-
-            .table tr td.redirecttopage {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-            }
-
-            ul.rating {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            nav-link.active {
-                background-color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .nav-tabs.card-header-tabs .nav-link:hover {
-                background:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .nav-tabs .nav-item.show .nav-link,
-            .nav-tabs .nav-link.active {
-                color: #fff;
-                background:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .btn-warning,
-            .btn-warning.disabled {
-                background:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-                border: 1px solid<?php    echo $_COOKIE['store_panel_color']; ?>;
-                box-shadow: none;
-            }
-
-            .payment-top-tab .nav-tabs.card-header-tabs .nav-link.active,
-            .payment-top-tab .nav-tabs.card-header-tabs .nav-link:hover {
-                border-color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .nav-tabs.card-header-tabs .nav-link span.badge-success {
-                background:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .nav-tabs.card-header-tabs .nav-link.active span.badge-success,
-            .nav-tabs.card-header-tabs .nav-link:hover span.badge-success,
-            .sidebar-nav ul li a.active,
-            .sidebar-nav ul li a.active:hover,
-            .sidebar-nav ul li.active a.has-arrow:hover,
-            .topbar ul.dropdown-user li a:hover {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .sidebar-nav ul li a.has-arrow:hover::after,
-            .sidebar-nav .active>.has-arrow::after,
-            .sidebar-nav li>.has-arrow.active::after,
-            .sidebar-nav .has-arrow[aria-expanded="true"]::after,
-            .sidebar-nav ul li a:hover {
-                border-color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            [type="checkbox"]:checked+label::before {
-                border-right: 2px solid<?php    echo $_COOKIE['store_panel_color']; ?>;
-                border-bottom: 2px solid<?php    echo $_COOKIE['store_panel_color']; ?>;
-            }
-
+            .topbar,
+            .btn-primary,
             .btn-primary:hover,
-            .btn-primary.disabled:hover {
-                background:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-                border: 1px solid<?php    echo $_COOKIE['store_panel_color']; ?>;
+            .btn-primary:focus,
+            .btn-warning,
+            .btn-warning:hover,
+            .btn-warning:focus {
+                background-color: var(--theme-color);
+                border-color: var(--theme-color);
             }
 
-            .btn-primary.active,
-            .btn-primary:active,
-            .btn-primary:focus,
-            .btn-primary.disabled.active,
-            .btn-primary.disabled:active,
-            .btn-primary.disabled:focus,
-            .btn-primary.active.focus,
-            .btn-primary.active:focus,
-            .btn-primary.active:hover,
-            .btn-primary.focus:active,
-            .btn-primary:active:focus,
-            .btn-primary:active:hover,
-            .open>.dropdown-toggle.btn-primary.focus,
-            .open>.dropdown-toggle.btn-primary:focus,
-            .open>.dropdown-toggle.btn-primary:hover,
-            .btn-primary.focus,
-            .btn-primary:focus,
-            .btn-primary:not(:disabled):not(.disabled).active:focus,
-            .btn-primary:not(:disabled):not(.disabled):active:focus,
-            .show>.btn-primary.dropdown-toggle:focus,
-            .btn-warning:hover,
-            .btn-warning:hover,
-            .btn-warning.disabled:hover,
-            .btn-warning.active.focus,
-            .btn-warning.active:focus,
-            .btn-warning.active:hover,
-            .btn-warning.focus:active,
-            .btn-warning:active:focus,
-            .btn-warning:active:hover,
-            .open>.dropdown-toggle.btn-warning.focus,
-            .open>.dropdown-toggle.btn-warning:focus,
-            .open>.dropdown-toggle.btn-warning:hover,
-            .btn-warning.focus,
-            .btn-warning:focus {
-                background:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-                border-color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-                box-shadow: 0 0 0 0.2rem<?php    echo $_COOKIE['store_panel_color']; ?>;
+            a,
+            a:hover,
+            a:focus,
+            .sidebar-nav ul li a:hover,
+            .sidebar-nav>ul>li.active>a,
+            .sidebar-nav>ul>li.active>a i,
+            .order-status .data i,
+            .order-status span.count,
+            .text-warning,
+            .text-info {
+                color: var(--theme-color);
+            }
+
+            blockquote {
+                border-left: 5px solid var(--theme-color);
             }
 
             .language-options select option,
-            .pagination>li>a.page-link:hover {
-                background:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .nav-tabs.card-header-tabs .active.nav-item .nav-link {
+            .pagination>li>a.page-link:hover,
+            .nav-tabs.card-header-tabs .nav-link.active {
+                background-color: var(--theme-color);
                 color: #fff;
-                background:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .print-btn button {
-                border: 2px solid<?php    echo $_COOKIE['store_panel_color']; ?>;
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .business-analytics .card-box i {
-                background:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            .order-status .data i,
-            .order-status span.count {
-                color:
-                    <?php    echo $_COOKIE['store_panel_color']; ?>
-                ;
-            }
-
-            @media screen and (max-width: 767px) {
-
-                .mini-sidebar .sidebar-nav ul li a:hover,
-                .sidebar-nav>ul>li.active>a {
-                    color:
-                        <?php    echo $_COOKIE['store_panel_color']; ?>
-                        !important;
-                }
             }
         </style>
-        <?php } ?>
 
-        <?php $id = Auth::user()->getvendorId(); ?>
+        @php
+            $vendorIdentifier = optional($layoutVendor)->id ?? ($layoutUser?->getvendorId());
+            $currentUserId = $layoutUser->id ?? optional(auth()->user())->id;
+        @endphp
         <script type="text/javascript">
-            var cuser_id='<?php echo $id; ?>';
+            var cuser_id = "{{ $vendorIdentifier }}";
         </script>
 
     </head>
@@ -360,28 +135,28 @@
                 // Only check for impersonation if we have proper session data
                 const impersonationData = localStorage.getItem('restaurant_impersonation');
                 const currentUser = @json(auth()->user());
-                
+
                 // Validate that we actually have impersonation data and it's not stale
                 if (impersonationData && currentUser) {
                     try {
                         const data = JSON.parse(impersonationData);
-                        
+
                         // Additional validation: check if impersonation data is recent (within 24 hours)
                         const impersonatedAt = new Date(data.impersonatedAt);
                         const now = new Date();
                         const hoursDiff = (now - impersonatedAt) / (1000 * 60 * 60);
-                        
+
                         // Only show banner if:
                         // 1. isImpersonated is true
                         // 2. impersonatedAt is valid
                         // 3. impersonation is recent (within 24 hours)
                         // 4. we have valid admin data
-                        if (data.isImpersonated && 
-                            data.impersonatedAt && 
-                            hoursDiff < 24 && 
-                            data.admin_id && 
+                        if (data.isImpersonated &&
+                            data.impersonatedAt &&
+                            hoursDiff < 24 &&
+                            data.admin_id &&
                             data.admin_email) {
-                            
+
                             // Show impersonation banner with improved UI
                             const banner = document.createElement('div');
                             banner.id = 'impersonation-banner';
@@ -413,7 +188,7 @@
                                     </div>
                                 </div>
                             `;
-                            
+
                             // Insert at the very top of the page
                             const body = document.body;
                             if (body.firstChild) {
@@ -432,24 +207,24 @@
                     }
                 }
             })();
-            
+
             // Function to end impersonation session
             function endImpersonation() {
                 if (confirm('Are you sure you want to end the impersonation session?')) {
                     // Clear impersonation data
                     localStorage.removeItem('restaurant_impersonation');
-                    
+
                     // Remove banner
                     const banner = document.getElementById('impersonation-banner');
                     if (banner) {
                         banner.remove();
                     }
-                    
+
                     // Redirect to logout or admin panel
                     window.location.href = '/logout';
                 }
             }
-            
+
             // Utility function to clear stale impersonation data
             function clearStaleImpersonationData() {
                 const impersonationData = localStorage.getItem('restaurant_impersonation');
@@ -459,7 +234,7 @@
                         const impersonatedAt = new Date(data.impersonatedAt);
                         const now = new Date();
                         const hoursDiff = (now - impersonatedAt) / (1000 * 60 * 60);
-                        
+
                         // Clear data if older than 24 hours or missing required fields
                         if (hoursDiff >= 24 || !data.admin_id || !data.admin_email) {
                             localStorage.removeItem('restaurant_impersonation');
@@ -471,7 +246,7 @@
                     }
                 }
             }
-            
+
             // Clear stale data on page load
             clearStaleImpersonationData();
             </script>
@@ -485,33 +260,33 @@
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 animation: slideDown 0.3s ease-out;
             }
-            
+
             .impersonation-alert .alert-heading {
                 color: #856404;
                 font-weight: 600;
             }
-            
+
             .impersonation-alert p {
                 color: #856404;
                 margin-bottom: 0.5rem;
             }
-            
+
             .impersonation-alert small {
                 color: #6c757d;
             }
-            
+
             .impersonation-alert .btn-outline-warning {
                 border-color: #ffc107;
                 color: #856404;
                 font-weight: 500;
             }
-            
+
             .impersonation-alert .btn-outline-warning:hover {
                 background-color: #ffc107;
                 border-color: #ffc107;
                 color: #212529;
             }
-            
+
             .impersonation-alert .btn-close {
                 background: none;
                 border: none;
@@ -519,11 +294,11 @@
                 color: #856404;
                 opacity: 0.7;
             }
-            
+
             .impersonation-alert .btn-close:hover {
                 opacity: 1;
             }
-            
+
             @keyframes slideDown {
                 from {
                     transform: translateY(-100%);
@@ -534,18 +309,18 @@
                     opacity: 1;
                 }
             }
-            
+
             /* Responsive adjustments */
             @media (max-width: 768px) {
                 .impersonation-alert .col-md-1 {
                     margin-bottom: 1rem;
                 }
-                
+
                 .impersonation-alert .col-md-2 {
                     text-align: center !important;
                     margin-top: 1rem;
                 }
-                
+
                 .impersonation-alert .btn {
                     margin: 0.25rem;
                 }
@@ -705,12 +480,12 @@
                     try {
                         firebase.initializeApp(firebaseConfig);
                         console.log('✅ Firebase initialized in main layout');
-                        
+
                         // Initialize Firestore database globally
                         window.database = firebase.firestore();
                         window.storage = firebase.storage();
                         window.auth = firebase.auth();
-                        
+
                         console.log('✅ Firebase services initialized');
                     } catch (error) {
                         console.error('❌ Firebase initialization error:', error);
@@ -738,7 +513,7 @@
                     console.warn('jQuery cookie plugin not loaded properly');
                 }
             });
-            
+
             // Shared hosting optimizations
             // Prevent memory leaks by cleaning up intervals and Firebase listeners
             window.addEventListener('beforeunload', function() {
@@ -747,7 +522,7 @@
                     clearInterval(i);
                     clearTimeout(i);
                 }
-                
+
                 // Clean up Firebase listeners
                 if (typeof orderListener !== 'undefined') {
                     orderListener();
@@ -792,20 +567,20 @@
                 // Check if we're in the middle of an impersonation
                 const impersonationInProgress = localStorage.getItem('impersonation_in_progress');
                 const impersonationTargetUrl = localStorage.getItem('impersonation_target_url');
-                
+
                 if (impersonationInProgress === 'true' && impersonationTargetUrl) {
                     console.log('🔐 Impersonation in progress, overriding default redirect');
-                    
+
                     // Override any existing onAuthStateChanged listeners
                     if (typeof firebase !== 'undefined' && firebase.auth) {
                         firebase.auth().onAuthStateChanged(function(user) {
                             if (user && impersonationInProgress === 'true') {
                                 console.log('✅ User authenticated during impersonation, redirecting to:', impersonationTargetUrl);
-                                
+
                                 // Clear the impersonation flags
                                 localStorage.removeItem('impersonation_in_progress');
                                 localStorage.removeItem('impersonation_target_url');
-                                
+
                                 // Redirect to the target URL
                                 setTimeout(function() {
                                     window.location.href = impersonationTargetUrl;
@@ -958,14 +733,14 @@
             database.collection('users').doc(cuser_id).get().then(async function(usersnapshots) {
                 var userData=usersnapshots.data();
                 var username=userData.firstName+' '+userData.lastName;
-               
+
                 if (!userData.hasOwnProperty('profilePictureURL') || userData.profilePictureURL === '' || userData.profilePictureURL === null || userData.profilePictureURL === "null") {
-                   
+
                     $('.profile-pic').attr('src', placeholderImage);
                 }
                 else
                 {
-                   
+
                     $('.profile-pic').attr('src',userData.profilePictureURL);
                 }
                 $('#username').text(username);
@@ -1247,10 +1022,10 @@
                 }
             };
 
-          
-                 database.collection('users').where('id','==',"{{$id}}").get().then(async function(snapshot) {
+
+                 database.collection('users').where('id','==',"{{ $currentUserId }}").get().then(async function(snapshot) {
                     var data=snapshot.docs[0].data();
-                    
+
                     if(commisionModel||subscriptionModel) {
                         if(data.hasOwnProperty('subscriptionPlanId')&&data.subscriptionPlanId!=null) {
                             var isSubscribed=true;
@@ -1278,7 +1053,7 @@
 
                         success: function(data) {
                             if(data.access) {
-                               
+
                             }
                         }
 
@@ -1286,7 +1061,7 @@
 
                 })
 
-            
+
         </script>
 
         <!-- Cache-based Impersonation Script -->
@@ -1296,35 +1071,35 @@
          */
         (function() {
             'use strict';
-            
+
             console.log('🔍 Cache-based impersonation script loaded');
-            
+
             // Wait for DOM to be ready
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', initializeImpersonation);
             } else {
                 initializeImpersonation();
             }
-            
+
             function initializeImpersonation() {
                 console.log('🔍 Initializing cache-based impersonation check...');
                 checkImpersonationSession();
             }
-            
+
             function checkImpersonationSession() {
                 console.log('🔍 Checking for impersonation session...');
-                
+
                 // Get impersonation key from URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const impersonationKey = urlParams.get('impersonation_key');
-                
+
                 if (!impersonationKey) {
                     console.log('ℹ️ No impersonation key found in URL');
                     return;
                 }
-                
+
                 console.log('🔍 Impersonation key found:', impersonationKey);
-                
+
                 fetch('/api/check-impersonation?impersonation_key=' + encodeURIComponent(impersonationKey), {
                     method: 'GET',
                     headers: {
@@ -1343,7 +1118,7 @@
                         console.log('✅ Impersonation session detected!');
                         console.log('Restaurant UID:', data.restaurant_uid);
                         console.log('Restaurant Name:', data.restaurant_name);
-                        
+
                         showImpersonationLoading();
                         processImpersonation(data.cache_key);
                     } else {
@@ -1354,10 +1129,10 @@
                     console.error('❌ Error checking impersonation session:', error);
                 });
             }
-            
+
             function processImpersonation(cacheKey) {
                 console.log('🚀 Processing impersonation...');
-                
+
                 fetch('/api/process-impersonation', {
                     method: 'POST',
                     headers: {
@@ -1379,9 +1154,9 @@
                     if (data.success) {
                         console.log('✅ Impersonation successful!');
                         console.log('Restaurant:', data.restaurant_name);
-                        
+
                         showImpersonationSuccess(data.restaurant_name);
-                        
+
                         setTimeout(() => {
                             console.log('🔄 Reloading page to apply impersonation...');
                             window.location.reload();
@@ -1396,16 +1171,16 @@
                     showImpersonationError('Error processing impersonation: ' + error.message);
                 });
             }
-            
+
             function getCSRFToken() {
                 const token = document.querySelector('meta[name="csrf-token"]');
                 return token ? token.getAttribute('content') : '';
             }
-            
+
             function showImpersonationLoading() {
                 const existing = document.getElementById('impersonation-loading');
                 if (existing) existing.remove();
-                
+
                 const loading = document.createElement('div');
                 loading.id = 'impersonation-loading';
                 loading.innerHTML = `
@@ -1425,11 +1200,11 @@
                 `;
                 document.body.appendChild(loading);
             }
-            
+
             function showImpersonationSuccess(restaurantName) {
                 const loading = document.getElementById('impersonation-loading');
                 if (loading) loading.remove();
-                
+
                 const success = document.createElement('div');
                 success.innerHTML = `
                     <div style="position: fixed; top: 20px; right: 20px; background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; z-index: 9999; max-width: 400px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #28a745;">
@@ -1438,16 +1213,16 @@
                     </div>
                 `;
                 document.body.appendChild(success);
-                
+
                 setTimeout(() => {
                     if (success.parentNode) success.remove();
                 }, 5000);
             }
-            
+
             function showImpersonationError(message) {
                 const loading = document.getElementById('impersonation-loading');
                 if (loading) loading.remove();
-                
+
                 const error = document.createElement('div');
                 error.innerHTML = `
                     <div style="position: fixed; top: 20px; right: 20px; background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; z-index: 9999; max-width: 400px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #dc3545;">
@@ -1456,12 +1231,12 @@
                     </div>
                 `;
                 document.body.appendChild(error);
-                
+
                 setTimeout(() => {
                     if (error.parentNode) error.remove();
                 }, 8000);
             }
-            
+
             // Add impersonation status indicator
             function addImpersonationStatusIndicator() {
                 fetch('/api/impersonation-status', {
@@ -1489,7 +1264,7 @@
                     console.error('Error checking impersonation status:', error);
                 });
             }
-            
+
             // Function to end impersonation
             window.endImpersonation = function() {
                 fetch('/api/end-impersonation', {
@@ -1515,10 +1290,10 @@
                     alert('Error ending impersonation: ' + error.message);
                 });
             };
-            
+
             // Add status indicator after a short delay
             setTimeout(addImpersonationStatusIndicator, 1000);
-            
+
         })();
         </script>
 
@@ -1558,43 +1333,43 @@
         <script>
         /**
          * Simple Session-Based Impersonation Script for Restaurant Panel
-         * 
+         *
          * This script checks for impersonation sessions and processes them automatically.
          * No URL parameters needed - everything is handled server-side.
          */
         (function() {
             'use strict';
-            
+
             console.log('🔍 Session-based impersonation script loaded');
-            
+
             // Wait for DOM to be ready
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', initializeImpersonation);
             } else {
                 initializeImpersonation();
             }
-            
+
             function initializeImpersonation() {
                 console.log('🔍 Initializing session-based impersonation check...');
-                
+
                 // Check if there's an impersonation session
                 checkImpersonationSession();
             }
-            
+
             function checkImpersonationSession() {
                 console.log('🔍 Checking for impersonation session...');
-                
+
                 // Get impersonation key from URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const impersonationKey = urlParams.get('impersonation_key');
-                
+
                 if (!impersonationKey) {
                     console.log('ℹ️ No impersonation key found in URL');
                     return;
                 }
-                
+
                 console.log('🔍 Impersonation key found:', impersonationKey);
-                
+
                 fetch('/api/check-impersonation?impersonation_key=' + encodeURIComponent(impersonationKey), {
                     method: 'GET',
                     headers: {
@@ -1613,7 +1388,7 @@
                         console.log('✅ Impersonation session detected!');
                         console.log('Restaurant UID:', data.restaurant_uid);
                         console.log('Restaurant Name:', data.restaurant_name);
-                        
+
                         showImpersonationLoading();
                         processImpersonation(data.cache_key);
                     } else {
@@ -1624,10 +1399,10 @@
                     console.error('❌ Error checking impersonation session:', error);
                 });
             }
-            
+
             function processImpersonation(cacheKey) {
                 console.log('🚀 Processing impersonation...');
-                
+
                 fetch('/api/process-impersonation', {
                     method: 'POST',
                     headers: {
@@ -1649,9 +1424,9 @@
                     if (data.success) {
                         console.log('✅ Impersonation successful!');
                         console.log('Restaurant:', data.restaurant_name);
-                        
+
                         showImpersonationSuccess(data.restaurant_name);
-                        
+
                         setTimeout(() => {
                             console.log('🔄 Reloading page to apply impersonation...');
                             window.location.reload();
@@ -1666,19 +1441,19 @@
                     showImpersonationError('Error processing impersonation: ' + error.message);
                 });
             }
-            
+
             function getCSRFToken() {
                 const token = document.querySelector('meta[name="csrf-token"]');
                 return token ? token.getAttribute('content') : '';
             }
-            
+
             function showImpersonationLoading() {
                 // Remove any existing loading indicator
                 const existing = document.getElementById('impersonation-loading');
                 if (existing) {
                     existing.remove();
                 }
-                
+
                 const loading = document.createElement('div');
                 loading.id = 'impersonation-loading';
                 loading.innerHTML = `
@@ -1699,14 +1474,14 @@
                 `;
                 document.body.appendChild(loading);
             }
-            
+
             function showImpersonationSuccess(restaurantName) {
                 // Remove loading indicator
                 const loading = document.getElementById('impersonation-loading');
                 if (loading) {
                     loading.remove();
                 }
-                
+
                 const success = document.createElement('div');
                 success.id = 'impersonation-success';
                 success.innerHTML = `
@@ -1717,7 +1492,7 @@
                     </div>
                 `;
                 document.body.appendChild(success);
-                
+
                 // Auto-remove after 5 seconds
                 setTimeout(() => {
                     if (success.parentNode) {
@@ -1725,14 +1500,14 @@
                     }
                 }, 5000);
             }
-            
+
             function showImpersonationError(message) {
                 // Remove loading indicator
                 const loading = document.getElementById('impersonation-loading');
                 if (loading) {
                     loading.remove();
                 }
-                
+
                 const error = document.createElement('div');
                 error.id = 'impersonation-error';
                 error.innerHTML = `
@@ -1743,7 +1518,7 @@
                     </div>
                 `;
                 document.body.appendChild(error);
-                
+
                 // Auto-remove after 8 seconds
                 setTimeout(() => {
                     if (error.parentNode) {
@@ -1751,7 +1526,7 @@
                     }
                 }, 8000);
             }
-            
+
             // Add impersonation status indicator to the page
             function addImpersonationStatusIndicator() {
                 // Check if user is currently impersonated
@@ -1774,7 +1549,7 @@
                             </div>
                         `;
                         document.body.insertBefore(indicator, document.body.firstChild);
-                        
+
                         // Adjust body padding to account for the indicator
                         document.body.style.paddingTop = '50px';
                     }
@@ -1783,7 +1558,7 @@
                     console.error('Error checking impersonation status:', error);
                 });
             }
-            
+
             // Function to end impersonation
             window.endImpersonation = function() {
                 fetch('/api/end-impersonation', {
@@ -1810,10 +1585,10 @@
                     alert('Error ending impersonation: ' + error.message);
                 });
             };
-            
+
             // Add status indicator after a short delay
             setTimeout(addImpersonationStatusIndicator, 1000);
-            
+
             // Ensure Firebase is ready before dashboard operations
             function ensureFirebaseReady() {
                 return new Promise((resolve) => {
@@ -1826,7 +1601,7 @@
                                 resolve();
                             }
                         }, 100);
-                        
+
                         // Timeout after 5 seconds
                         setTimeout(() => {
                             clearInterval(checkFirebase);
@@ -1836,10 +1611,10 @@
                     }
                 });
             }
-            
+
             // Make Firebase ready function globally available
             window.ensureFirebaseReady = ensureFirebaseReady;
-            
+
         })();
         </script>
     </body>
