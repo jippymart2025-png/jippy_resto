@@ -36,16 +36,16 @@ Route::post('/health/cleanup', [App\Http\Controllers\SystemHealthController::cla
 Route::prefix('api')->group(function () {
     // Check if there's an active impersonation session
     Route::get('/check-impersonation', [App\Http\Controllers\ImpersonationController::class, 'checkImpersonation']);
-    
+
     // Process the impersonation and log in the user
     Route::post('/process-impersonation', [App\Http\Controllers\ImpersonationController::class, 'processImpersonation']);
-    
+
     // End impersonation session
     Route::post('/end-impersonation', [App\Http\Controllers\ImpersonationController::class, 'endImpersonation']);
-    
+
     // Get current impersonation status
     Route::get('/impersonation-status', [App\Http\Controllers\ImpersonationController::class, 'getImpersonationStatus']);
-    
+
     // Debug endpoint to store test impersonation data
     Route::post('/debug-store-impersonation', [App\Http\Controllers\ImpersonationController::class, 'debugStoreImpersonationData']);
 });
@@ -245,7 +245,7 @@ Route::middleware(['check.subscription'])->group(function () {
     Route::get('withdraw-method/add', [App\Http\Controllers\WithdrawMethodController::class, 'create'])->name('withdraw-method.create');
 
     Route::patch('/foods/inline-update/{id}', [App\Http\Controllers\FoodController::class, 'inlineUpdate'])->name('foods.inlineUpdate');
-    
+
     Route::get('/foods/download-template', [App\Http\Controllers\FoodController::class, 'downloadTemplate'])->name('foods.download-template');
     Route::post('/foods/import', [App\Http\Controllers\FoodController::class, 'import'])->name('foods.import')->middleware('throttle:5,1'); // 5 requests per minute
 });
